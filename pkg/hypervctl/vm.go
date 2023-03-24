@@ -415,6 +415,7 @@ func (vmm *VirtualMachineManager) NewVirtualMachine(name string, config *Hardwar
 		Complete(); err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -495,4 +496,13 @@ func (vm *VirtualMachine) State() EnabledState {
 
 func (vm *VirtualMachine) IsStarting() bool {
 	return Starting.equal(vm.EnabledState)
+}
+
+func (vm *VirtualMachine) UpdateProcessorCount(count uint16) error {
+	// this should probably obtain the process information, update it, and push it?
+	return ErrNotImplemented
+}
+
+func (vm *VirtualMachine) UpdateMemorySize(count uint16) error {
+	return ErrNotImplemented
 }

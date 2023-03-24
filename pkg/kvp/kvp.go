@@ -143,3 +143,30 @@ func GetSplitKeyValues(key string, pool PoolID, kvps map[string]ValuePair) (stri
 	}
 	return strings.Join(parts, ""), leftOvers, nil
 }
+
+func ReadKVPsFromFilesystem() ([]byte, error) {
+	ret, err := readKvpData()
+	if err != nil {
+		return nil, err
+	}
+	if len(ret) == 0 {
+		return []byte{}, nil
+	}
+	var (
+		counter int
+		parts   Segments
+	)
+	for {
+		lookForKey := fmt.Sprintf("%s%d", Key, counter)
+		val, exists := ret[lookForKey]
+		if !exists {
+			break
+		}
+		parts = append(parts, []byte(val))
+		counter++
+	}
+	if len(parts) < 1 {
+		return nil, ErrNoIgnitionKeysFound
+	}
+	return Glue(parts), nil
+}
